@@ -25,6 +25,9 @@ jobs:
         with:
           node-version: "20"
           cache: npm
+
+      - name: Install dependencies
+        run: npm install
     
       # PRの内容を公開
       - name: PullRequest Open
