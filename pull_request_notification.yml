@@ -1,0 +1,42 @@
+name: Pull Request Notification
+on:
+  pull_request:
+    types: [opened, reopened]
+env:
+  SLACK_USERNAME: GitHub
+  SLACK_ICON_EMOJI: ":github:"
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+  SLACK_CHANNEL: "@morita.suguru"
+
+jobs:
+  build:
+    name: Pull Request Notification Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          clean: false
+          lfs: false
+
+      # PRの内容を公開
+      - name: PullRequest Open
+        id: pr-info
+        run: |
+          echo The PR was opened
+          echo "REPOSITORY_NAME=${{ github.event.repository.full_name }}" >> $GITHUB_OUTPUT
+          echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
+
+      # Slackへの通知
+      - name: Slack Notification
+        env:
+          TEXT: "▼${{ steps.pr-info.outputs.REPOSITORY_NAME }} \n ${{ steps.pr-info.outputs.PR_URL }}"
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"${TEXT}\", \"channel\":\"${SLACK_CHANNEL}\", \"username\":\"${SLACK_USERNAME}\", \"icon_emoji\":\"${SLACK_ICON_EMOJI}\"}" \
+            ${SLACK_WEBHOOK}
