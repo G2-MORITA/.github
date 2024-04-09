@@ -19,12 +19,6 @@ jobs:
         with:
           clean: false
           lfs: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
     
       # PRの内容を公開
       - name: PullRequest Open
