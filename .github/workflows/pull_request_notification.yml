@@ -35,7 +35,7 @@ jobs:
 
       # 作ったアクションの実行 ここから 
       - name: Create Message 
-        uses: ./.github/actions/action-a 
+        uses: ./.github/actions/action-a
         id: create-message 
         with: 
           json-data: "{\"name\":\"${{ steps.pr-info.outputs.REPOSITORY_NAME }}\", \"url\":\"${{ steps.pr-info.outputs.PR_URL }}\"}"
