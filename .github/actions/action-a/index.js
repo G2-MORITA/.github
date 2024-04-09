@@ -8,7 +8,7 @@ try {
     let message = ''; 
 
     // 文字列の生成（aaとccc/fffの文字列をつなげて「これは表示テスト」を作る） 
-    message = jsonObject.aaa + jsonObject.ccc.fff; 
+    message = jsonObject.repository + jsonObject.slack_channel; 
     // outputの設定 
     core.setOutput("result-message", message); 
 } catch (error) { 
