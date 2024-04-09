@@ -19,6 +19,12 @@ jobs:
         with:
           clean: false
           lfs: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
     
       # PRの内容を公開
       - name: PullRequest Open
@@ -30,7 +36,7 @@ jobs:
 
       # 作ったアクションの実行 ここから 
       - name: Create Message 
-        uses: ./.github/actions/action-a
+        uses: ./
         id: create-message 
         with: 
           json-data: "{\"repository\":\"${{ steps.pr-info.outputs.REPOSITORY_NAME }}\", \"slack_channel\":\"${{ steps.pr-info.outputs.PR_URL }}\"}"
