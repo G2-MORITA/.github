@@ -2,6 +2,7 @@ name: Pull Request Notification
 on:
   pull_request:
     types: [opened, reopened]
+
 env:
   SLACK_USERNAME: GitHub
   SLACK_ICON_EMOJI: ":github:"
@@ -32,10 +33,17 @@ jobs:
           echo "REPOSITORY_NAME=${{ github.event.repository.full_name }}" >> $GITHUB_OUTPUT
           echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
 
+      # 作ったアクションの実行 ここから 
+      - name: Create Message 
+        uses: ./.github/actions/action-a 
+        id: create-message 
+        with: 
+          json-data: "{\"name\":\"${{ steps.pr-info.outputs.REPOSITORY_NAME }}\", \"url\":\"${{ steps.pr-info.outputs.PR_URL }}\"}"
+
       # Slackへの通知
       - name: Slack Notification
         env:
-          TEXT: "▼${{ steps.pr-info.outputs.REPOSITORY_NAME }} \n ${{ steps.pr-info.outputs.PR_URL }}"
+          TEXT: "${{ steps.create-message.outputs.result-message }}"
         run: |
           curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"${TEXT}\", \"channel\":\"${SLACK_CHANNEL}\", \"username\":\"${SLACK_USERNAME}\", \"icon_emoji\":\"${SLACK_ICON_EMOJI}\"}" \
