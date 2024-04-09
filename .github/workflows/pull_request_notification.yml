@@ -33,7 +33,7 @@ jobs:
         uses: ./.github/actions/action-a
         id: create-message 
         with: 
-          json-data: "{\"name\":\"${{ steps.pr-info.outputs.REPOSITORY_NAME }}\", \"url\":\"${{ steps.pr-info.outputs.PR_URL }}\"}"
+          json-data: "{\"repository\":\"${{ steps.pr-info.outputs.REPOSITORY_NAME }}\", \"slack_channel\":\"${{ steps.pr-info.outputs.PR_URL }}\"}"
 
       # Slackへの通知
       - name: Slack Notification
