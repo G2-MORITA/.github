@@ -41,13 +41,17 @@ const main = async () => {
     try {
         const res = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: `シート1!A:B`,
+            range: `シート1!A2:B`,
         });
         console.log(res.data.values);
 
-        // inputのJSONオブジェクトを取得する 
-        //　core.getInputの戻り値はstringのため、JSON.parseが必要 
-        const jsonObject = JSON.parse(res.data.values); 
+        const jsonObject = res.data.values.map(row => {
+            return {
+                repository: row[0],
+                slack_channel: row[1],
+            };
+        })
+
         let message = ''; 
     
         // 文字列の生成（aaとccc/fffの文字列をつなげて「これは表示テスト」を作る） 
