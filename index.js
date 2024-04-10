@@ -43,11 +43,11 @@ const main = async () => {
             spreadsheetId: SHEET_ID,
             range: `シート1!A:B`,
         });
-        console.log(res.data);
+        console.log(res.data.values);
 
         // inputのJSONオブジェクトを取得する 
         //　core.getInputの戻り値はstringのため、JSON.parseが必要 
-        const jsonObject = JSON.parse(res.data); 
+        const jsonObject = JSON.parse(res.data.values); 
         let message = ''; 
     
         // 文字列の生成（aaとccc/fffの文字列をつなげて「これは表示テスト」を作る） 
@@ -58,7 +58,6 @@ const main = async () => {
     } catch (error) {
         console.log(error);
         core.setFailed(error.message); 
-
     }
 
     console.log('---Keyファイル削除');
