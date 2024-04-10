@@ -43,6 +43,8 @@ jobs:
         id: create-message 
         with: 
           json-data: "{\"repository\":\"${{ steps.pr-info.outputs.REPOSITORY_NAME }}\", \"slack_channel\":\"${{ steps.pr-info.outputs.PR_URL }}\"}"
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
 
       # Slackへの通知
       - name: Slack Notification

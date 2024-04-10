@@ -7,16 +7,18 @@ const {google} = require('googleapis');
 
 const fs = require('fs');
 
-require('dotenv').config();
-
 const KEYFILE_NAME = `keyfile.json`;
 const KEYFILE_PATH = `./${KEYFILE_NAME}`;
 
 const main = async () => {
+
+    const GOOGLE_PRIVATE_KEY = core.getInput('GOOGLE_PRIVATE_KEY');
+    const SHEET_ID = core.getInput('SHEET_ID');
+
     try {
         console.log(`--keyfile作成`);
-        console.log(process.env.GOOGLE_PRIVATE_KEY);
-        fs.writeFileSync(KEYFILE_NAME, process.env.GOOGLE_PRIVATE_KEY);
+        console.log(GOOGLE_PRIVATE_KEY);
+        fs.writeFileSync(KEYFILE_NAME, GOOGLE_PRIVATE_KEY);
         console.log(`作成done--`);
     } catch (error) {
         console.log(error);
@@ -38,7 +40,7 @@ const main = async () => {
     console.log(`--sheetアクセス`);
     try {
         const res = await sheets.spreadsheets.values.get({
-            spreadsheetId: process.env.SHEET_ID,
+            spreadsheetId: SHEET_ID,
             range: `シート1!A:B`,
         });
         console.log(res.data);
