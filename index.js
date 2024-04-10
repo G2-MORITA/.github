@@ -52,7 +52,7 @@ const main = async () => {
 
         if (result){
             console.log(result);
-            core.setOutput("slack-channel", result[1]); 
+            core.setOutput("slack_channel", result[1]); 
         }
         else {
             core.setFailed(TARGET_REPOSITORY_NAME + "がシートに記載されていません"); 
