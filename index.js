@@ -45,11 +45,6 @@ const main = async () => {
         });
         console.log(res.data);
 
-    } catch (error) {
-        console.log(error);
-    }
-
-    try { 
         // inputのJSONオブジェクトを取得する 
         //　core.getInputの戻り値はstringのため、JSON.parseが必要 
         const jsonObject = JSON.parse(res.data); 
@@ -59,8 +54,11 @@ const main = async () => {
         message = jsonObject.repository + jsonObject.slack_channel; 
         // outputの設定 
         core.setOutput("result-message", message); 
-    } catch (error) { 
+
+    } catch (error) {
+        console.log(error);
         core.setFailed(error.message); 
+
     }
 
     console.log('---Keyファイル削除');
