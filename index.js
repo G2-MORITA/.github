@@ -57,7 +57,7 @@ const main = async () => {
         let message = ''; 
     
         // 文字列の生成（aaとccc/fffの文字列をつなげて「これは表示テスト」を作る） 
-        message = jsonObject.repository + jsonObject.slack_channel; 
+        message = jsonObject[0].repository + jsonObject[0].slack_channel; 
         // outputの設定 
         core.setOutput("result-message", message); 
 
