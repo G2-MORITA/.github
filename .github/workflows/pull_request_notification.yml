@@ -47,6 +47,7 @@ jobs:
 
       # Slackへの通知
       - name: Slack Notification
+        if: success()  
         env:
           TEXT: "${{ steps.create-message.outputs.slack_channel }}"
           SLACK_CHANNEL: "${{ steps.create-message.outputs.slack_channel }}"
