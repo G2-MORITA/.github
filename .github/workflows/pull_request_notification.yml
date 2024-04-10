@@ -7,7 +7,6 @@ env:
   SLACK_USERNAME: GitHub
   SLACK_ICON_EMOJI: ":github:"
   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-  SLACK_CHANNEL: "@morita.suguru"
 
 jobs:
   build:
@@ -42,14 +41,15 @@ jobs:
         uses: ./
         id: create-message 
         with: 
-          json-data: "{\"repository\":\"${{ steps.pr-info.outputs.REPOSITORY_NAME }}\", \"slack_channel\":\"${{ steps.pr-info.outputs.PR_URL }}\"}"
+          TARGET_REPOSITORY_NAME: ${{ steps.pr-info.outputs.REPOSITORY_NAME }}
           GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
 
       # Slackへの通知
       - name: Slack Notification
         env:
-          TEXT: "${{ steps.create-message.outputs.result-message }}"
+          TEXT: "${{ steps.create-message.outputs.slack_channel }}"
+          SLACK_CHANNEL: "${{ steps.create-message.outputs.slack_channel }}"
         run: |
           curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"${TEXT}\", \"channel\":\"${SLACK_CHANNEL}\", \"username\":\"${SLACK_USERNAME}\", \"icon_emoji\":\"${SLACK_ICON_EMOJI}\"}" \

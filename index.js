@@ -14,6 +14,7 @@ const main = async () => {
 
     const GOOGLE_PRIVATE_KEY = core.getInput('GOOGLE_PRIVATE_KEY');
     const SHEET_ID = core.getInput('SHEET_ID');
+    const TARGET_REPOSITORY_NAME = core.repository('TARGET_REPOSITORY_NAME');
 
     try {
         console.log(`--keyfile作成`);
@@ -45,21 +46,17 @@ const main = async () => {
         });
         console.log(res.data.values);
 
-        const jsonObject = res.data.values.map(row => {
-            return {
-                repository: row[0],
-                slack_channel: row[1],
-            };
+        var result = dataValues.find(row => {
+            return row[0] == TARGET_REPOSITORY_NAME;
         });
 
-        console.log(jsonObject);
-
-        let message = ''; 
-    
-        // 文字列の生成（aaとccc/fffの文字列をつなげて「これは表示テスト」を作る） 
-        message = jsonObject[0].repository + jsonObject[0].slack_channel; 
-        // outputの設定 
-        core.setOutput("result-message", message); 
+        if (result){
+            console.log(result);
+            core.setOutput("slack-channel", result[1]); 
+        }
+        else {
+            core.setFailed(TARGET_REPOSITORY_NAME + "がシートに記載されていません"); 
+        }
 
     } catch (error) {
         console.log(error);
