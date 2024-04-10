@@ -46,7 +46,7 @@ const main = async () => {
         });
         console.log(res.data.values);
 
-        var result = dataValues.find(row => {
+        var result = res.data.values.find(row => {
             return row[0] == TARGET_REPOSITORY_NAME;
         });
 
