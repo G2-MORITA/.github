@@ -50,7 +50,9 @@ const main = async () => {
                 repository: row[0],
                 slack_channel: row[1],
             };
-        })
+        });
+
+        console.log(jsonObject);
 
         let message = ''; 
     
