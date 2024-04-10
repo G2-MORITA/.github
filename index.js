@@ -14,7 +14,7 @@ const main = async () => {
 
     const GOOGLE_PRIVATE_KEY = core.getInput('GOOGLE_PRIVATE_KEY');
     const SHEET_ID = core.getInput('SHEET_ID');
-    const TARGET_REPOSITORY_NAME = core.repository('TARGET_REPOSITORY_NAME');
+    const TARGET_REPOSITORY_NAME = core.getInput('TARGET_REPOSITORY_NAME');
 
     try {
         console.log(`--keyfile作成`);
