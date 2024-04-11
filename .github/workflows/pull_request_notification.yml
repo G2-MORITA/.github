@@ -69,7 +69,7 @@ jobs:
                     [
                         {
                             "title":"User",
-                            "value": "${{ github.event.pull_request.user }}",
+                            "value": "${{ github.event.pull_request.user.name }}",
                             "short":true,
                         }
                     ]
