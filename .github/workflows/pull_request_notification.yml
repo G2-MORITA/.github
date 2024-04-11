@@ -29,17 +29,24 @@ jobs:
         run: npm install
     
       # PRの内容を公開
-      - name: Dump Values
+      - name: Dump pull_request values
+        run: | 
+          echo '${{ toJSON(github.event.pull_request) }}'
+
+      - name: Dump Repository values
+        run: | 
+          echo '${{ toJSON(github.event.repository) }}'
+
+      - name: Dump Github values
         run: | 
           echo '${{ toJSON(github) }}'
-          echo '${{ toJSON(github.event.pull_request) }}'
 
       # 作ったアクションの実行 ここから 
       - name: Create Message 
         uses: ./
         id: create-message 
         with: 
-          TARGET_REPOSITORY_NAME: ${{ steps.pr-info.outputs.REPOSITORY_NAME }}
+          TARGET_REPOSITORY_NAME: ${{ github.event.repository }}
           GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
 
