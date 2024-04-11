@@ -52,7 +52,7 @@ jobs:
 
       - name: Create slack-request-env.json file
         run: |
-          cat << EOF > slack-request-env.json
+          cat -te << EOF > slack-request-env.json
           {
             "text": "",
             "channel": "${{ steps.create-message.outputs.slack_channel }}",
