@@ -46,7 +46,7 @@ jobs:
         uses: ./
         id: create-message 
         with: 
-          TARGET_REPOSITORY_NAME: ${{ github.event.repository }}
+          TARGET_REPOSITORY_NAME: ${{ github.event.repository.full_name }}
           GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
 
