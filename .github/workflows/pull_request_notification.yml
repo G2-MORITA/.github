@@ -29,12 +29,10 @@ jobs:
         run: npm install
     
       # PRの内容を公開
-      - name: PullRequest Open
-        id: pr-info
-        run: |
-          echo The PR was opened
-          echo "REPOSITORY_NAME=${{ github.event.repository.full_name }}" >> $GITHUB_OUTPUT
-          echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
+      - name: Dump Values
+        run: | 
+          echo '${{ toJSON(github) }}'
+          echo '${{ toJSON(github.event.pull_request) }}'
 
       # 作ったアクションの実行 ここから 
       - name: Create Message 
@@ -59,7 +57,7 @@ jobs:
                     "title": "#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}",
                     "title_link": "${{ github.event.pull_request.html_url }}",
                     "color": "good",
-                    "text": "${{ github.event.pull_request.body.body }}",
+                    "text": "${{ github.event.pull_request.body }}",
                     "fields":
                     [
                         {
