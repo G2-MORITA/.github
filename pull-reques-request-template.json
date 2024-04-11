@@ -1,6 +1,0 @@
-{
-  "text": "あああ",
-  "channel": "$SLACK_CHANNEL",
-  "username": "$SLACK_USERNAME",
-  "icon_emoji": "$SLACK_ICON_EMOJI"
-}

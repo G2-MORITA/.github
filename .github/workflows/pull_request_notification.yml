@@ -49,10 +49,27 @@ jobs:
         run: |
           cat << EOF > slack-request-env.json
           {
-            "text": "あああ",
+            "text": "",
             "channel": "${{ steps.create-message.outputs.slack_channel }}",
             "username": "$SLACK_USERNAME",
-            "icon_emoji": "$SLACK_ICON_EMOJI"
+            "icon_emoji": "$SLACK_ICON_EMOJI",
+            "attachments":
+              [
+                  {
+                    "title": "#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}",
+                    "title_link": "${{ github.event.pull_request.html_url }}",
+                    "color": "good",
+                    "text": "${{ github.event.pull_request.body }}",
+                    "fields":
+                    [
+                        {
+                            "title":"User",
+                            "value": "${{ github.event.pull_request.user }}",
+                            "short":true,
+                        }
+                    ]
+                  }
+              ]
           }
           EOF
           cat slack-request-env.json
