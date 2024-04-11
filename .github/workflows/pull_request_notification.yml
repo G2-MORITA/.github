@@ -45,19 +45,22 @@ jobs:
           GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
 
-      - name: Create Slack Request 
-        id: create-slack-request
+      - name: Create slack-request-env.json file
         run: |
-          echo "slack_request_param=$(cat pull-reques-request-template.json)" >> $GITHUB_OUTPUT
+          cat << EOF > slack-request-env.json
+          {
+            "text": "あああ",
+            "channel": "${{ steps.create-message.outputs.slack_channel }}",
+            "username": "$SLACK_USERNAME",
+            "icon_emoji": "$SLACK_ICON_EMOJI"
+          }
+          EOF
+          cat env.json
 
       # Slackへの通知
       - name: Slack Notification
         if: success()  
-        env:
-          TEXT: "${{ steps.create-message.outputs.slack_channel }}"
-          SLACK_CHANNEL: "${{ steps.create-message.outputs.slack_channel }}"
-          REQUEST_PARAM: "${{ steps.create-slack-request.outputs.slack_request_param }}"
         run: |
           curl -X POST -H 'Content-type: application/json' \
-            --data $REQUEST_PARAM \
+            --data @slack-request-env.json \
             ${SLACK_WEBHOOK}
