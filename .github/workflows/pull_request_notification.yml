@@ -41,6 +41,10 @@ jobs:
         run: | 
           echo '${{ toJSON(github) }}'
 
+      - name: Dump Github User values
+        run: | 
+          echo '${{ toJSON(github.event.pull_request.user) }}'
+
       # 作ったアクションの実行 ここから 
       - name: Create Message 
         uses: ./
@@ -69,7 +73,7 @@ jobs:
                     [
                         {
                             "title":"User",
-                            "value": "${{ github.event.pull_request.head.user.login }}",
+                            "value": "${{ github.event.pull_request.user }}",
                             "short":true,
                         }
                     ]
