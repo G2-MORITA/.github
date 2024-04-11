@@ -55,7 +55,7 @@ jobs:
             "icon_emoji": "$SLACK_ICON_EMOJI"
           }
           EOF
-          cat env.json
+          cat slack-request-env.json
 
       # Slackへの通知
       - name: Slack Notification
