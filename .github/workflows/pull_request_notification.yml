@@ -58,7 +58,7 @@ jobs:
         run: |
           cat << EOF > slack-request-env.json
           {
-            "text": "",
+            "text": "PullRequestが新しく作成されました",
             "channel": "${{ steps.create-message.outputs.slack_channel }}",
             "username": "$SLACK_USERNAME",
             "icon_emoji": "$SLACK_ICON_EMOJI",
@@ -76,10 +76,6 @@ jobs:
                               "value": "${{ github.event.pull_request.user.login }}",
                               "short":true,
                           }
-                      ],
-                    "mrkdwn_in":
-                      [
-                        "text"
                       ]
                   }
               ]
