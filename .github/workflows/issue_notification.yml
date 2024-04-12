@@ -1,4 +1,4 @@
-name: Pull Request Notification
+name: Issue Notification
 on:
   issues:
     types: [opened, reopened]
@@ -58,7 +58,7 @@ jobs:
         run: |
           cat << EOF > slack-request-env.json
           {
-            "text": "PullRequestが新しく作成されました",
+            "text": "Issueが新しく作成されました",
             "channel": "${{ steps.create-message.outputs.slack_channel }}",
             "username": "$SLACK_USERNAME",
             "icon_emoji": "$SLACK_ICON_EMOJI",
