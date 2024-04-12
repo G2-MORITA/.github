@@ -70,13 +70,17 @@ jobs:
                     "color": "good",
                     "text": "${{ github.event.pull_request.body }}",
                     "fields":
-                    [
-                        {
-                            "title":"User",
-                            "value": "${{ github.event.pull_request.user.login }}",
-                            "short":true,
-                        }
-                    ]
+                      [
+                          {
+                              "title":"User",
+                              "value": "${{ github.event.pull_request.user.login }}",
+                              "short":true,
+                          }
+                      ]
+                    "mrkdwn_in":
+                      [
+                        "fields"
+                      ]
                   }
               ]
           }
