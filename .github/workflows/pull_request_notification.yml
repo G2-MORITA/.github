@@ -79,7 +79,7 @@ jobs:
                       ]
                     "mrkdwn_in":
                       [
-                        "fields"
+                        "text"
                       ]
                   }
               ]
