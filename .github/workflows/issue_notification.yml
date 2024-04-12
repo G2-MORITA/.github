@@ -1,0 +1,92 @@
+name: Pull Request Notification
+on:
+  issues:
+    types: [opened, reopened]
+
+env:
+  SLACK_USERNAME: GitHub
+  SLACK_ICON_EMOJI: ":github:"
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  build:
+    name: Issue Notification Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          clean: false
+          lfs: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+    
+      # PRの内容を公開
+      - name: Dump issues values
+        run: | 
+          echo '${{ toJSON(github.event.issue) }}'
+
+      - name: Dump Repository values
+        run: | 
+          echo '${{ toJSON(github.event.repository) }}'
+
+      - name: Dump Github values
+        run: | 
+          echo '${{ toJSON(github) }}'
+
+      - name: Dump Github User values
+        run: | 
+          echo '${{ toJSON(github.event.issue.user) }}'
+
+      # 作ったアクションの実行 ここから 
+      - name: Create Message 
+        uses: ./
+        id: create-message 
+        with: 
+          TARGET_REPOSITORY_NAME: ${{ github.event.repository.full_name }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+
+      - name: Create slack-request-env.json file
+        run: |
+          cat << EOF > slack-request-env.json
+          {
+            "text": "PullRequestが新しく作成されました",
+            "channel": "${{ steps.create-message.outputs.slack_channel }}",
+            "username": "$SLACK_USERNAME",
+            "icon_emoji": "$SLACK_ICON_EMOJI",
+            "attachments":
+              [
+                  {
+                    "title": "#${{ github.event.issue.number }} ${{ github.event.issue.title }}",
+                    "title_link": "${{ github.event.issue.html_url }}",
+                    "color": "good",
+                    "text": "${{ github.event.issue.body }}",
+                    "fields":
+                      [
+                          {
+                              "title":"User",
+                              "value": "${{ github.event.issue.user.login }}",
+                              "short":true,
+                          }
+                      ]
+                  }
+              ]
+          }
+          EOF
+          cat slack-request-env.json
+
+      # Slackへの通知
+      - name: Slack Notification
+        if: success()  
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data-binary @slack-request-env.json \
+            ${SLACK_WEBHOOK}
