@@ -1,0 +1,62 @@
+name: Deploy Workflow
+on:
+  push:
+    branches:
+      - 'main'
+
+env:
+  SLACK_USERNAME: GitHub
+  SLACK_ICON_EMOJI: ":github:"
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  copy:
+    name: Copy Workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Setup commit description
+        env:
+          RUN_URL: "${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}"
+          HEAD_COMMIT_URL: "${{ github.event.repository.html_url }}/commit/${{ github.event.after || github.sha }}"
+        id: setup_description
+        run: |
+          DESCRIPTION=$(cat << EOF
+          update GraphQL Schema file 🚀
+
+          created from ${{ env.RUN_URL }}
+          latest commit: ${{ env.HEAD_COMMIT_URL }}
+          )
+          DESCRIPTION="${DESCRIPTION//$'\n'/'%0A'}"
+          echo "::set-output name=content::$DESCRIPTION"
+      - name: Copy GraphQL Schema file 
+        uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
+        env:
+          API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
+        with:
+          source_file: "app/graphql/schema.graphql"
+          destination_repo: "G2-MORITA/g2-morita-test-1"
+          destination_folder: "src/apis/graphql"
+          destination_branch: "main"
+          destination_branch_create: "feature/update-graphql-schema"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          user_name: "github-actions[bot]"
+          commit_message: ${{ steps.setup_description.outputs.content }}
+      - name: create Pull Request to another-repo
+        run: |
+          gh pr create \
+            --title "update GraphQL Schema file " \
+            --body "${{ steps.setup_description.outputs.content }}" \
+            --repo G2-MORITA/g2-morita-test-1 \
+            --base main \
+            --head feature/update-graphql-schema \
+            --reviewer "${{ github.event.head_commit.committer.username || github.triggering_actor }}"
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
