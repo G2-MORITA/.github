@@ -48,8 +48,10 @@ jobs:
 
       # ワークフローを実行しているリポジトリにはPRを投げない(既にマージ済みのため)
       - name: Cancel If Source Repository.
-        if: ${{ matrix.targets }} == ${{ github.repository.name}}
+        if: ${{ matrix.targets }} == ${{ github.repository.name }}
         run: |
+          echo ${{ matrix.targets }}
+          echo ${{ github.repository.name }}
           echo "ワークフローを実行しているリポジトリのためこのジョブを中断します"
           exit 0
         
