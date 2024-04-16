@@ -31,9 +31,7 @@ jobs:
           cache-dependency-path: .github/access_spreadsheet/package-lock.json
 
       - name: Install dependencies
-        run: |
-          echo $(pwd)
-          npm install
+        run: npm install
 
       - name: Create Message 
         uses: ./.github/access_spreadsheet
