@@ -33,11 +33,11 @@ jobs:
         id: set_repository_matrix
         run: |
           $repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
-          $target_repositories = @()
+          $target_repositories=@()
           foreach ($repo in $repositories) {
-            $repositor += repo
+            $repositor+=repo
           }
-          $taregts_str = $targets -join '","'
+          $taregts_str=$targets -join '","'
           echo "target=[`"$taregts_str`"]" >> $GITHUB_OUTPUT
 
   copy-workflow:
