@@ -64,14 +64,20 @@ jobs:
 
       # 他リポジトリに対してPRを投げる
       - name: Create Pull Request to another-repo
+        id: create_pull_request
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          gh pr create \
+          pull_request_url=$(gh pr create \
             --title "Update GitWorkflow (Auto) " \
             --body "Gitワークフロー更新 from: ${{ github.event.repository.html_url }}" \
             --repo ${{ github.repository_owner }}/${{ matrix.targets }} \
             --base main \
             --head feature/update-git-workflow \
-            --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}"
- 
+            --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}")
+          echo "pull_request_url=$pull_request_url" >> $GITHUB_OUTPUT
+
+      - name: Merge Pull Request
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: gh pr merge ${{steps.create_pull_request.outputs.pull_request_url}} --merge --delete-branch
