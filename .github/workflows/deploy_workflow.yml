@@ -14,12 +14,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Generate token
         id: generate_token
         uses: tibdex/github-app-token@v1
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Setup commit description
         env:
           RUN_URL: "${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}"
@@ -28,7 +30,8 @@ jobs:
         run: |
           DESCRIPTION="Gitワークフロー更新(自動コミット)"
           echo "content=$DESCRIPTION" >> $GITHUB_OUTPUT
-      - name: Copy GraphQL Schema file 
+
+      - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
         env:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
@@ -41,7 +44,8 @@ jobs:
           user_email: "github-actions[bot]@users.noreply.github.com"
           user_name: "github-actions[bot]"
           commit_message: "Gitワークフロー更新(自動コミット)"
-      - name: create Pull Request to another-repo
+
+      - name: Create Pull Request to another-repo
         run: |
           gh pr create \
             --title "Update GitWorkflow (Auto) " \
@@ -49,6 +53,6 @@ jobs:
             --repo G2-MORITA/g2-morita-test-1 \
             --base main \
             --head feature/update-git-workflow \
-            --reviewer "${{ github.event.head_commit.committer.username || github.triggering_actor }}"
+            --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}"
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
