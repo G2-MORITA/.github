@@ -28,11 +28,11 @@ jobs:
     name: Set Repository Matrix
     runs-on: ubuntu-latest
     needs: generate_token
-    env: 
-      GH_TOKEN: ${{ github.token }}
     steps:
       - name: SetRepositoryMatrix
         id: set_repository_matrix
+        env: 
+          GH_TOKEN: ${{ github.token }}
         run: |
           $repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
           $target_repositories=@()
