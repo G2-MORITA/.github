@@ -35,7 +35,6 @@ jobs:
           latest commit: ${{ env.HEAD_COMMIT_URL }}
           )
           EOF
-          DESCRIPTION="${DESCRIPTION//$'\n'/'%0A'}"
           echo "content=$DESCRIPTION" >> $GITHUB_OUTPUT
       - name: Copy GraphQL Schema file 
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
