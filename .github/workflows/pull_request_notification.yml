@@ -32,9 +32,9 @@ jobs:
         run: |
           npm install
 
-      - name: Create Message 
+      - name: Find Slack Channel
         uses: ./.github/access_spreadsheet
-        id: create-message 
+        id: find-slack-channel
         with: 
           TARGET_REPOSITORY_NAME: ${{ github.event.repository.full_name }}
           GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
@@ -45,7 +45,7 @@ jobs:
           cat << EOF > slack-request-env.json
           {
             "text": "PullRequestが新しく作成されました",
-            "channel": "${{ steps.create-message.outputs.slack_channel }}",
+            "channel": "${{ steps.find-slack-channel.outputs.slack_channel }}",
             "username": "$SLACK_USERNAME",
             "icon_emoji": "$SLACK_ICON_EMOJI",
             "attachments":
