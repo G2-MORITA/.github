@@ -28,7 +28,7 @@ jobs:
           HEAD_COMMIT_URL: "${{ github.event.repository.html_url }}/commit/${{ github.event.after || github.sha }}"
         id: setup_description
         run: |
-          DESCRIPTION="あああ"
+          DESCRIPTION="Gitワークフロー更新(自動コミット)"
           echo "content=$DESCRIPTION" >> $GITHUB_OUTPUT
       - name: Copy GraphQL Schema file 
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
@@ -39,18 +39,18 @@ jobs:
           destination_repo: "G2-MORITA/g2-morita-test-1"
           destination_folder: "./"
           destination_branch: "main"
-          destination_branch_create: "feature/update-graphql-schema"
+          destination_branch_create: "feature/update-git-workflow"
           user_email: "github-actions[bot]@users.noreply.github.com"
           user_name: "github-actions[bot]"
-          commit_message: ${{ steps.setup_description.outputs.content }}
+          commit_message: "Gitワークフロー更新(自動コミット)"
       - name: create Pull Request to another-repo
         run: |
           gh pr create \
-            --title "update GraphQL Schema file " \
-            --body "${{ steps.setup_description.outputs.content }}" \
+            --title "Update GitWorkflow (Auto) " \
+            --body "Gitワークフロー更新 from: ${{ github.event.repository.html_url }}" \
             --repo G2-MORITA/g2-morita-test-1 \
             --base main \
-            --head feature/update-graphql-schema \
+            --head feature/update-git-workflow \
             --reviewer "${{ github.event.head_commit.committer.username || github.triggering_actor }}"
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
