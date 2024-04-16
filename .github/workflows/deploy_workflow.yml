@@ -46,17 +46,10 @@ jobs:
       - name: Echo Matrix
         run: echo ${{ matrix.targets }}
 
-      # ワークフローを実行しているリポジトリにはPRを投げない(既にマージ済みのため)
-      - name: Cancel If Source Repository.
-        if: ${{ matrix.targets }} == ${{ github.event.repository.name }}
-        run: |
-          echo "matrix: ${{ matrix.targets }}"
-          echo "repository_name: ${{ github.event.repository.name }}"
-          echo "ワークフローを実行しているリポジトリのためこのジョブを中断します"
-          exit 0
-        
+      # 他リポジトリに対してディレクトリをコピーする
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
+        if: ${{ matrix.targets }} != ${{ github.event.repository.name }}
         env:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
@@ -69,7 +62,11 @@ jobs:
           user_name: "github-actions[bot]"
           commit_message: "Gitワークフロー更新(自動コミット)"
 
+      # 他リポジトリに対してPRを投げる
       - name: Create Pull Request to another-repo
+        if: ${{ matrix.targets }} != ${{ github.event.repository.name }}
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           gh pr create \
             --title "Update GitWorkflow (Auto) " \
@@ -78,5 +75,4 @@ jobs:
             --base main \
             --head feature/update-git-workflow \
             --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}"
-        env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+ 
