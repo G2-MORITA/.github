@@ -35,9 +35,9 @@ jobs:
         env: 
           GH_TOKEN: ${{ github.token }}
         run: |
-          repositories="$(gh repo list G2-MORITA --json name --jq '.[].name')"
+          repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
           echo $repositories
-          target_repositories=@()
+          target_repositories=()
           foreach ($repo in $repositories) {
             $target_repositories+=repo
           }
