@@ -46,16 +46,12 @@ jobs:
       - name: Echo Matrix
         run: echo ${{ matrix.targets }}
 
-      - name: Dump Repository values
-        run: | 
-          echo '${{ toJSON(github.action_repository) }}'
-          echo '-----------'
-          echo '${{ toJSON(github.event.repository) }}'
-      
       # ワークフローを実行しているリポジトリにはPRを投げない(既にマージ済みのため)
       - name: Cancel If Source Repository.
-        if: ${{ matrix.targets }} == ${{ github.action_repository}}
-        run: exit 0
+        if: ${{ matrix.targets }} == ${{ github.repository.name}}
+        run: |
+          echo "ワークフローを実行しているリポジトリのためこのジョブを中断します"
+          exit 0
         
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
