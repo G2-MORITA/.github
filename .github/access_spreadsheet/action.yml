@@ -1,0 +1,14 @@
+name: 'CreateMessage' 
+description: 'JSONオブジェクトから情報を抽出して文字列を生成する何か' 
+inputs: 
+  json-data: # inputするときの名前 
+    description: 'JSONオブジェクト' 
+    required: true 
+
+outputs: 
+  result-message: # outputして他から参照するための名前 
+    description: '生成した文字列' 
+
+runs: 
+  using: 'node20' 
+  main: 'index.js'

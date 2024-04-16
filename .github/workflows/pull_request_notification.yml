@@ -12,6 +12,10 @@ jobs:
   build:
     name: Pull Request Notification Job
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./access_spreadsheet
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,7 +33,7 @@ jobs:
         run: npm install
 
       - name: Create Message 
-        uses: ./.github/actions/access_spreadsheet
+        uses: ./.github/access_spreadsheet
         id: create-message 
         with: 
           TARGET_REPOSITORY_NAME: ${{ github.event.repository.full_name }}
