@@ -22,6 +22,7 @@ jobs:
         with:
           clean: false
           lfs: false
+          path: ./github/access_spreadsheet
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
