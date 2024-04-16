@@ -52,7 +52,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
           source_file: ".github"
-          destination_repo: "${{ matrix.targets }}"
+          destination_repo: "${{ github.repository_owner }}/${{ matrix.targets }}"
           destination_folder: "./"
           destination_branch: "main"
           destination_branch_create: "feature/update-git-workflow"
@@ -65,7 +65,7 @@ jobs:
           gh pr create \
             --title "Update GitWorkflow (Auto) " \
             --body "Gitワークフロー更新 from: ${{ github.event.repository.html_url }}" \
-            --repo ${{ matrix.targets }} \
+            --repo ${{ github.repository_owner }}/${{ matrix.targets }} \
             --base main \
             --head feature/update-git-workflow \
             --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}"
