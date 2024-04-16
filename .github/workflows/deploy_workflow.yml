@@ -21,7 +21,7 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
-          
+
     outputs:
       token: ${{ steps.generate_token.outputs.token }}
 
@@ -35,7 +35,10 @@ jobs:
         env: 
           GH_TOKEN: ${{ github.token }}
         run: |
+          gh repo list G2-MORITA --json name --jq '.[].name'
+          echo "AAA"
           repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
+          echo "BBB"
           target_repositories=@()
           foreach ($repo in $repositories) {
             $target_repositories+=repo
