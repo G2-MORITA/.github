@@ -37,8 +37,10 @@ jobs:
         run: |
           gh repo list G2-MORITA --json name --jq '.[].name'
           echo "AAA"
-          repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
+          repositories="$(gh repo list G2-MORITA --json name --jq '.[].name')"
           echo "BBB"
+          hoge=gh repo list G2-MORITA --json name --jq '.[].name'
+          echo $hoge
           target_repositories=@()
           foreach ($repo in $repositories) {
             $target_repositories+=repo
