@@ -21,6 +21,7 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          
     outputs:
       token: ${{ steps.generate_token.outputs.token }}
 
@@ -34,13 +35,15 @@ jobs:
         env: 
           GH_TOKEN: ${{ github.token }}
         run: |
-          $repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
-          $target_repositories=@()
+          repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
+          target_repositories=@()
           foreach ($repo in $repositories) {
-            $repositor+=repo
+            $target_repositories+=repo
           }
-          $taregts_str=$targets -join '","'
-          echo "target=[`"$taregts_str`"]" >> $GITHUB_OUTPUT
+          $taregts_str=$target_repositories -join '","'
+          echo "targets=[`"$taregts_str`"]" >> $GITHUB_OUTPUT
+    outputs:
+      targets: ${{ steps.set_repository_matrix.outputs.targets }}
 
   copy-workflow:
     name: Copy Workflow
@@ -50,7 +53,7 @@ jobs:
       - set_matrix
     strategy:
       matrix:
-        targets: ${{ fromJson(needs.set_matrix.outputs) }}
+        targets: ${{ fromJson(needs.set_matrix.outputs.targets) }}
     steps:
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
