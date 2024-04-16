@@ -27,25 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-    
-      # PRの内容を公開
-      - name: Dump issues values
-        run: | 
-          echo '${{ toJSON(github.event.issue) }}'
-
-      - name: Dump Repository values
-        run: | 
-          echo '${{ toJSON(github.event.repository) }}'
-
-      - name: Dump Github values
-        run: | 
-          echo '${{ toJSON(github) }}'
-
-      - name: Dump Github User values
-        run: | 
-          echo '${{ toJSON(github.event.issue.user) }}'
-
-      # 作ったアクションの実行 ここから 
+ 
       - name: Create Message 
         uses: ./
         id: create-message 
