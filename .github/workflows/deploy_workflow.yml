@@ -8,8 +8,8 @@ env:
   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
-  copy:
-    name: Copy Workflow
+  generate_token:
+    name: Generate Access Token
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,26 +21,41 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
+    outputs:
+      token: ${{ steps.generate_token.outputs.token }}
 
-      - name: Setup commit description
+  set_matrix:
+    name: Set Repository Matrix
+    runs-on: ubuntu-latest
+    needs: generate_token
+    steps:
+      - name: SetRepositoryMatrix
+        id: set_repository_matrix
         env:
-          RUN_URL: "${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}"
-          HEAD_COMMIT_URL: "${{ github.event.repository.html_url }}/commit/${{ github.event.after || github.sha }}"
-        id: setup_description
+          GH_TOKEN: ${{ needs.generate_token.outputs.token }}
         run: |
-          DESCRIPTION="Gitワークフロー更新(自動コミット)"
-          echo "content=$DESCRIPTION" >> $GITHUB_OUTPUT
+          $repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
+          $target_repositories = @()
+          foreach ($repo in $repositories) {
+            $repositor += repo
+          }
+          $taregts_str = $targets -join '","'
+          echo "target=[`"$taregts_str`"]" >> $GITHUB_OUTPUT
 
-      - name: Get Other Repositories
-        run: |
-          gh repo list G2-MORITA -L 999 --json name
-        env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
-
+  copy-workflow:
+    name: Copy Workflow
+    runs-on: ubuntu-latest
+    needs: 
+      - generate_token
+      - set_matrix
+    strategy:
+      matrix:
+        targets: ${{ fromJson(needs.set_matrix.outputs) }}
+    steps:
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
         env:
-          API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
+          API_TOKEN_GITHUB: ${{ needs.generate_token.outputs.token }}
         with:
           source_file: ".github"
           destination_repo: "G2-MORITA/g2-morita-test-1"
@@ -61,4 +76,4 @@ jobs:
             --head feature/update-git-workflow \
             --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}"
         env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GH_TOKEN: ${{ needs.generate_token.outputs.token }}
