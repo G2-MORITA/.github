@@ -20,6 +20,15 @@ jobs:
           repositories=$(gh repo list --json name --limit 999 | jq '[.[].name]')
           echo "targets=$(echo $repositories | jq -c .)" >> $GITHUB_OUTPUT
           echo $repositories
+
+      - name: Dump repository_owner
+        run: | 
+          echo '${{ toJSON(github.repository_owner) }}'
+
+      - name: Dump repository_owner
+        run: | 
+          echo '${{ toJSON(github.repository) }}'
+  
     outputs:
       targets: ${{ steps.set_repository_matrix.outputs.targets }}
 
