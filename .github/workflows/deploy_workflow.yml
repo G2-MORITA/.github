@@ -28,13 +28,7 @@ jobs:
           HEAD_COMMIT_URL: "${{ github.event.repository.html_url }}/commit/${{ github.event.after || github.sha }}"
         id: setup_description
         run: |
-          DESCRIPTION=$(cat << EOF
-          update GraphQL Schema file 🚀
-
-          created from ${{ env.RUN_URL }}
-          latest commit: ${{ env.HEAD_COMMIT_URL }}
-          )
-          EOF
+          DESCRIPTION="あああ"
           echo "content=$DESCRIPTION" >> $GITHUB_OUTPUT
       - name: Copy GraphQL Schema file 
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
