@@ -37,7 +37,7 @@ jobs:
         with:
           source_file: ".github"
           destination_repo: "G2-MORITA/g2-morita-test-1"
-          destination_folder: "src/apis/graphql"
+          destination_folder: "./"
           destination_branch: "main"
           destination_branch_create: "feature/update-graphql-schema"
           user_email: "github-actions[bot]@users.noreply.github.com"
