@@ -1,7 +1,6 @@
 name: Pull Request Notification
 on:
-  pull_request:
-    types: [opened, reopened]
+  workflow_dispatch:
 
 env:
   SLACK_USERNAME: GitHub
