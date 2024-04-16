@@ -17,7 +17,8 @@ jobs:
         env: 
           GH_TOKEN: ${{ github.token }}
         run: |
-          repositories=$(gh repo list ${{ github.repository_owner }} --json name --limit 999 | jq '[.[].name]')
+          repositories=$(gh repo list ${{ github.repository_owner }} --json name --limit 999 | jq '[.[].name]' | jq 'del(.${{ github.event.repository.name }})')
+
           echo "targets=$(echo $repositories | jq -c .)" >> $GITHUB_OUTPUT
           echo $repositories
   
@@ -46,10 +47,9 @@ jobs:
       - name: Echo Matrix
         run: echo ${{ matrix.targets }}
 
-      # 他リポジトリに対してディレクトリをコピーする
+      # 他リポジトリに対してディレクトリをコピーする(ただしワークフローを実行しているリポジトリには既にマージ済みのためPRを投げない)
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
-        if: ${{ matrix.targets }} != ${{ github.event.repository.name }}
         env:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
@@ -64,7 +64,6 @@ jobs:
 
       # 他リポジトリに対してPRを投げる
       - name: Create Pull Request to another-repo
-        if: ${{ matrix.targets }} != ${{ github.event.repository.name }}
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
