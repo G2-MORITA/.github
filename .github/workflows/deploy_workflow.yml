@@ -84,4 +84,4 @@ jobs:
             --head feature/update-git-workflow \
             --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}"
         env:
-          GH_TOKEN: ${{ needs.generate_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
