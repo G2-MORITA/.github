@@ -35,7 +35,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
-          source_file: "app/graphql/schema.graphql"
+          source_file: ".github"
           destination_repo: "G2-MORITA/g2-morita-test-1"
           destination_folder: "src/apis/graphql"
           destination_branch: "main"
