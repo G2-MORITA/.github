@@ -1,8 +1,6 @@
 name: Deploy Workflow
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_dispatch:
 
 env:
   SLACK_USERNAME: GitHub
