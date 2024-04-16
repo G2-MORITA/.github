@@ -33,7 +33,7 @@ jobs:
           echo "$(ls -a)"
           echo $GITHUB_WORKSPACE
           echo "bbb"
-          cd github/access_spreadsheet
+          cd .github/access_spreadsheet
           npm install
 
       - name: Create Message 
