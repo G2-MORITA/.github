@@ -17,7 +17,7 @@ jobs:
         env: 
           GH_TOKEN: ${{ github.token }}
         run: |
-          repositories=$(gh repo list ${{ github.repository_owner }} --json name --limit 999 | jq '[.[].name]' | jq ' .-[${{ github.event.repository.name }}]')
+          repositories=$(gh repo list ${{ github.repository_owner }} --json name --limit 999 | jq '[.[].name]' | jq ' .-["${{ github.event.repository.name }}"]')
 
           echo "targets=$(echo $repositories | jq -c .)" >> $GITHUB_OUTPUT
           echo $repositories
