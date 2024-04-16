@@ -31,8 +31,6 @@ jobs:
     steps:
       - name: SetRepositoryMatrix
         id: set_repository_matrix
-        env:
-          GH_TOKEN: ${{ needs.generate_token.outputs.token }}
         run: |
           $repositories=$(gh repo list G2-MORITA --json name --jq '.[].name')
           $target_repositories = @()
