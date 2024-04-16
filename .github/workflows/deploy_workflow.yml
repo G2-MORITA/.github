@@ -56,7 +56,7 @@ jobs:
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
         env:
-          API_TOKEN_GITHUB: ${{ needs.generate_token.outputs.token }}
+          API_TOKEN_GITHUB: ${{ github.token }}
         with:
           source_file: ".github"
           destination_repo: "G2-MORITA/g2-morita-test-1"
