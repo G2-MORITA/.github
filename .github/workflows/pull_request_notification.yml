@@ -29,7 +29,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          echo "aaa"
+          echo "$(ls -a)"
           echo $GITHUB_WORKSPACE
+          echo "bbb"
           npm install
 
       - name: Create Message 
