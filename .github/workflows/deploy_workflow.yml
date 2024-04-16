@@ -31,6 +31,13 @@ jobs:
           DESCRIPTION="Gitワークフロー更新(自動コミット)"
           echo "content=$DESCRIPTION" >> $GITHUB_OUTPUT
 
+      - name: Get Other Repositories
+        run: |
+          gh repo list G2-MORITA -L 999
+          echo "$(gh repo list G2-MORITA -L 999)"
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
         env:
