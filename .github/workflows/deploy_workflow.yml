@@ -22,10 +22,38 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
+    outputs:
+      token: ${{ steps.generate_token.outputs.token }}
+
+  set_matrix:
+    name: Set Repository Matrix
+    runs-on: ubuntu-latest
+    needs: generate_token
+    steps:
+      - name: SetRepositoryMatrix
+        id: set_repository_matrix
+        env: 
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          repositories=$(gh repo list --json name --limit 999 | jq '[.[].name]')
+          echo "targets=$(echo $repositories | jq -c .)" >> $GITHUB_OUTPUT
+    outputs:
+      targets: ${{ steps.set_repository_matrix.outputs.targets }}
+
+  copy-workflow:
+    name: Copy Workflow
+    runs-on: ubuntu-latest
+    needs: 
+      - generate_token
+      - set_matrix
+    strategy:
+      matrix:
+        targets: ${{ fromJson(needs.set_matrix.outputs.targets) }}
+    steps:
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
         env:
-          API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
+          API_TOKEN_GITHUB: ${{ needs.generate_token.outputs.token }}
         with:
           source_file: ".github"
           destination_repo: "G2-MORITA/g2-morita-test-1"
@@ -46,4 +74,4 @@ jobs:
             --head feature/update-git-workflow \
             --reviewer "${{ github.repository.head_commit.committer.username || github.triggering_actor }}"
         env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GH_TOKEN: ${{ needs.generate_token.outputs.token }}
