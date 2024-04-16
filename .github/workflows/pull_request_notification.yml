@@ -47,7 +47,7 @@ jobs:
 
       # 作ったアクションの実行 ここから 
       - name: Create Message 
-        uses: ./
+        uses: ./.github/actions/access_spreadsheet
         id: create-message 
         with: 
           TARGET_REPOSITORY_NAME: ${{ github.event.repository.full_name }}
