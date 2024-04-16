@@ -33,8 +33,7 @@ jobs:
 
       - name: Get Other Repositories
         run: |
-          gh repo list G2-MORITA -L 999
-          echo "$(gh repo list G2-MORITA -L 999)"
+          gh repo list G2-MORITA -L 999 --json name
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
 
