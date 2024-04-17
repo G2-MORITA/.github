@@ -69,7 +69,7 @@ jobs:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           pull_request_url=$(gh pr create \
-            --title "Update GitWorkflow (Auto) " \
+            --title "Update GitWorkflow (AutoPR) " \
             --body "Gitワークフロー更新 from: ${{ github.event.repository.html_url }}" \
             --repo ${{ github.repository_owner }}/${{ matrix.targets }} \
             --base main \
