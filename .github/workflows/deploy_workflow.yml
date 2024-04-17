@@ -44,9 +44,6 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Echo Matrix
-        run: echo ${{ matrix.targets }}
-
       # 他リポジトリに対してディレクトリをコピーする(ただしワークフローを実行しているリポジトリには既にマージ済みのためPRを投げない)
       - name: Copy Workflow files
         uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
