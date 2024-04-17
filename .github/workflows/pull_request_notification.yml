@@ -12,12 +12,9 @@ jobs:
   build:
     name: Pull Request Notification Job
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.title, 'AutoPR') == false
 
     steps:
-      - name: Skip If AutoPR
-        if: contains(${{ github.event.pull_request.title }}, 'AutoPR')
-        run: exit 0
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
